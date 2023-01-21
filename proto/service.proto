@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "github.com/paul-kang-1/grpc-tests";
+
+service ArrayComparer {
+    rpc GetIntArray(ArrayRequest) returns (IntArrayReply) {}
+}
+
+message ArrayRequest {
+    int32 length = 1;
+}
+
+message IntArrayReply {
+    repeated int32 f = 1;
+}
