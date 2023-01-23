@@ -4,7 +4,7 @@
 // - protoc             v3.21.12
 // source: service.proto
 
-package grpc_tests
+package grpc_test
 
 import (
 	context "context"
@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArrayComparerClient interface {
 	GetIntArray(ctx context.Context, in *ArrayRequest, opts ...grpc.CallOption) (*IntArrayReply, error)
+	GetUserArray(ctx context.Context, in *ArrayRequest, opts ...grpc.CallOption) (*UserArrayReply, error)
 }
 
 type arrayComparerClient struct {
@@ -42,11 +43,21 @@ func (c *arrayComparerClient) GetIntArray(ctx context.Context, in *ArrayRequest,
 	return out, nil
 }
 
+func (c *arrayComparerClient) GetUserArray(ctx context.Context, in *ArrayRequest, opts ...grpc.CallOption) (*UserArrayReply, error) {
+	out := new(UserArrayReply)
+	err := c.cc.Invoke(ctx, "/ArrayComparer/GetUserArray", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArrayComparerServer is the server API for ArrayComparer service.
 // All implementations must embed UnimplementedArrayComparerServer
 // for forward compatibility
 type ArrayComparerServer interface {
 	GetIntArray(context.Context, *ArrayRequest) (*IntArrayReply, error)
+	GetUserArray(context.Context, *ArrayRequest) (*UserArrayReply, error)
 	mustEmbedUnimplementedArrayComparerServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedArrayComparerServer struct {
 
 func (UnimplementedArrayComparerServer) GetIntArray(context.Context, *ArrayRequest) (*IntArrayReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetIntArray not implemented")
+}
+func (UnimplementedArrayComparerServer) GetUserArray(context.Context, *ArrayRequest) (*UserArrayReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserArray not implemented")
 }
 func (UnimplementedArrayComparerServer) mustEmbedUnimplementedArrayComparerServer() {}
 
@@ -88,6 +102,24 @@ func _ArrayComparer_GetIntArray_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArrayComparer_GetUserArray_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ArrayRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArrayComparerServer).GetUserArray(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ArrayComparer/GetUserArray",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArrayComparerServer).GetUserArray(ctx, req.(*ArrayRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArrayComparer_ServiceDesc is the grpc.ServiceDesc for ArrayComparer service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var ArrayComparer_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetIntArray",
 			Handler:    _ArrayComparer_GetIntArray_Handler,
+		},
+		{
+			MethodName: "GetUserArray",
+			Handler:    _ArrayComparer_GetUserArray_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

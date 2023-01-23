@@ -1,8 +1,9 @@
-module github.com/paul-kang-1/grpc-tests/server
+module github.com/paul-kang-1/grpc-test
 
 go 1.18
 
 require (
+	github.com/sirupsen/logrus v1.9.0
 	google.golang.org/grpc v1.52.0
 	google.golang.org/protobuf v1.28.1
 )

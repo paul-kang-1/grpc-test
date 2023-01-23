@@ -1,8 +1,10 @@
 syntax = "proto3";
-option go_package = "github.com/paul-kang-1/grpc-tests";
+option go_package = "github.com/paul-kang-1/grpc-test";
 
 service ArrayComparer {
     rpc GetIntArray(ArrayRequest) returns (IntArrayReply) {}
+
+    rpc GetUserArray(ArrayRequest) returns (UserArrayReply) {}
 }
 
 message ArrayRequest {
@@ -11,4 +13,21 @@ message ArrayRequest {
 
 message IntArrayReply {
     repeated int32 f = 1;
+}
+
+message UserArrayReply {
+    repeated UserResponse users = 1;
+}
+
+message UserResponse {
+  int64 id = 1;
+  string username = 2;
+  string display_name = 3;
+  optional string profile = 4;
+  optional string link = 5;
+  optional string instrument = 6;
+  optional string wallet_address = 7;
+  optional string email = 8;
+  optional string number = 9;
+  optional bool is_artist = 10;
 }
